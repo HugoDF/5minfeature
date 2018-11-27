@@ -1,35 +1,53 @@
 <template>
   <div id="app">
-    <div class="container">
-      <FeatureNameInput
-        :feature-name="featureName"
-        @change="onFeatureNameChanged($event)"
-        :disabled="countingDown"
-      />
-    </div>
-    <div class="container">
-      <TimeSelector
-        :activeTimeName="activeTimeName"
-        @selected="onTimeSelected($event)"
-        :disabled="countingDown"
+    <div v-if="!finished">
+      <div class="container">
+        <FeatureNameInput
+          :feature-name="featureName"
+          @change="onFeatureNameChanged($event)"
+          :disabled="countingDown"
         />
+      </div>
+      <div class="container">
+        <TimeSelector
+          :activeTimeName="activeTimeName"
+          @selected="onTimeSelected($event)"
+          :disabled="countingDown"
+          />
+      </div>
+      <div class="container">
+        <Countdown
+          ref="countdown"
+          :leading-zero="true"
+          :emit-events="true"
+          :time="activeTime"
+          :auto-start="false"
+          @countdownend="onCountdownEnd()"
+          >
+          <template slot-scope="props">
+            {{props.minutes}}:{{props.seconds}} left
+          </template>
+        </Countdown>
+      </div>
+      <div class="container">
+        <button @click="toggleCountdown()">
+          {{ countingDown ? "Stop" : "Start" }}
+        </button>
+      </div>
     </div>
-    <div class="container">
-      <Countdown
-        :time="activeTime"
-        leading-zero
-        emit-events
-        :auto-start="false"
-        ref="countdown">>
-        <template slot-scope="props">
-          {{props.minutes}}:{{props.seconds}} left
-        </template>
-      </Countdown>
-    </div>
-    <div class="container">
-      <button @click="toggleCountdown()">
-        {{ countingDown ? "Stop" : "Start" }}
-      </button>
+    <div v-else class="container success-container">
+      <p>You finished "{{ featureName }}"</p>
+      <div class="share-container">
+        <TwitterShare
+          :text="shareText"
+        >
+          Let Twitter know
+        </TwitterShare>
+        
+        <button @click="reset()">
+          Ship another feature
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -39,20 +57,21 @@ import FeatureNameInput from '@/components/FeatureNameInput.vue'
 import TimeSelector from '@/components/TimeSelector.vue'
 import Countdown from '@xkeshi/vue-countdown'
 
-
 export default {
   name: 'app',
   components: {
     FeatureNameInput,
     TimeSelector,
     Countdown,
+    TwitterShare: () => import('@/components/TwitterShare.vue')
   },
   data() {
     return {
       activeTimeName: undefined,
       activeTime: undefined,
       countingDown: false,
-      featureName: ''
+      featureName: '',
+      finished: false,
     }
   },
   methods: {
@@ -65,6 +84,19 @@ export default {
     },
     onFeatureNameChanged(newName) {
       this.featureName = newName
+    },
+    onCountdownEnd() {
+      this.finished = true
+      this.countingDown = false
+    },
+    reset() {
+      this.finished = false
+      this.featureName = ''
+    }
+  },
+  computed: {
+    shareText() {
+      return `${this.featureName} got shipped in ${this.activeTimeName}`
     }
   },
   watch: {
@@ -87,5 +119,12 @@ export default {
 .container {
   margin-top: 2em;
   margin-bottom: 2em;
+}
+.share-container {
+  display: flex;
+  justify-content: center;
+}
+.success-container {
+  margin-top: 10em;
 }
 </style>
