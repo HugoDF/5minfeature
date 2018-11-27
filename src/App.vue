@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     shareText() {
-      return `${this.featureName} got shipped in ${this.activeTimeName}`
+      return `"${this.featureName}" got shipped in ${this.activeTimeName}`
     }
   },
   watch: {
