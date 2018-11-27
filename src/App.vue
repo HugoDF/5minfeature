@@ -62,6 +62,11 @@
         </button>
       </div>
     </div>
+    <div class="footer">
+      <h3>Enjoy using 5 minute feature?</h3>
+      <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/hugodf"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:5px">Buy me a coffee</span></a>
+      <p>Built by <a href="https://codewithhugo.com">Hugo</a>, <a href="https://twitter.com/hugo__df/status/1067509921082720256">Credits</a></p>
+    </div>
   </div>
 </template>
 
@@ -148,5 +153,39 @@ export default {
 .success-container {
   padding-top: 2em;
   padding-bottom: 2em;
+}
+.bmc-button img{
+  width: 27px !important;
+  margin-bottom: 1px !important;
+  box-shadow: none !important;
+  border: none !important;
+  vertical-align: middle !important;
+}
+.bmc-button{
+  line-height: 36px !important;
+  height:37px !important;
+  text-decoration: none !important;
+  display:inline-flex !important;
+  color:#ffffff !important;
+  background-color:#000000 !important;
+  border-radius: 3px !important;
+  border: 1px solid transparent !important;
+  padding: 1px 9px !important;
+  font-size: 22px !important;
+  letter-spacing: 0.6px !important;
+  box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;
+  margin: 0 auto !important;
+  font-family: cursive !important;
+  box-sizing: border-box !important;
+  transition: 0.3s all linear !important;
+}
+.bmc-button:hover, .bmc-button:active, .bmc-button:focus {
+  text-decoration: none !important;
+  box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;
+  opacity: 0.85 !important;
+  color:#ffffff !important;
+}
+.footer {
+  margin-top: 10em;
 }
 </style>
