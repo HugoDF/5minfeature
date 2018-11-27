@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@xkeshi/vue-countdown": "^1.0.1",
+    "@chenfengyuan/vue-countdown": "^1.0.1",
     "vue": "^2.5.17"
   },
   "devDependencies": {

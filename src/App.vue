@@ -19,14 +19,14 @@
       <div class="container">
         <Countdown
           ref="countdown"
-          :leading-zero="true"
-          :emit-events="true"
+          :transform="countdownTransform"
           :time="activeTime"
           :auto-start="false"
-          @countdownend="onCountdownEnd()"
+          @end="onCountdownEnd()"
           >
           <template slot-scope="props">
-            {{props.minutes}}:{{props.seconds}} left
+            <div class="countdown-display">{{props.minutes}}:{{props.seconds}}</div>
+            <div>remaining</div>
           </template>
         </Countdown>
       </div>
@@ -35,10 +35,10 @@
           {{ countingDown ? "Stop" : "Start" }}
         </button>
         <div class="container">
-          <button @click="done()">
+          <button :disabled="!featureName" @click="done()">
             Done!
           </button>
-          <button @click="reset()">
+          <button @click="resetCountdownTimer()">
             Reset
           </button>
         </div>
@@ -73,7 +73,7 @@
 <script>
 import FeatureNameInput from '@/components/FeatureNameInput.vue'
 import TimeSelector from '@/components/TimeSelector.vue'
-import Countdown from '@xkeshi/vue-countdown'
+import Countdown from '@chenfengyuan/vue-countdown'
 import TwitterShare from '@/components/TwitterShare.vue'
 
 export default {
@@ -94,6 +94,19 @@ export default {
     }
   },
   methods: {
+    countdownTransform(props) {
+      Object.entries(props).forEach(([key, value]) => {
+        // Adds leading zero
+        const digits = value < 10 ? `0${value}` : value;
+
+        // uses singular form when the value is less than 2
+        const word = value < 2 ? key.replace(/s$/, '') : key;
+
+        props[key] = digits;
+      });
+
+      return props;
+    },
     onTimeSelected({ time, name }) {
       this.activeTime = time
       this.activeTimeName = name
@@ -111,6 +124,15 @@ export default {
     reset() {
       this.finished = false
       this.featureName = ''
+      this.countingDown = false
+      this.resetCountdownTimer()
+    },
+    resetCountdownTimer() {
+      // hack to reset the countdown timer
+      this.activeTime++
+      this.$nextTick(() => {
+        this.activeTime--
+      })
     },
     done() {
       this.finished = true
@@ -130,7 +152,7 @@ export default {
       if(val) {
         this.$refs.countdown.start()
       } else {
-        this.$refs.countdown.pause()
+        this.$refs.countdown.abort()
       }
     }
   }
@@ -141,6 +163,7 @@ export default {
 #app {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   text-align: center;
+  padding-top: 2em;
 }
 .container {
   margin-top: 2em;
@@ -153,6 +176,17 @@ export default {
 .success-container {
   padding-top: 2em;
   padding-bottom: 2em;
+}
+button {
+  padding: .5em 1em;
+  margin: .1em;
+  background-color: white;
+  border: solid 1px lightgrey;
+  font-size: 1em;
+}
+.countdown-display {
+  font-size: 2em;
+  margin-bottom: .25em;
 }
 .bmc-button img{
   width: 27px !important;
@@ -186,6 +220,6 @@ export default {
   color:#ffffff !important;
 }
 .footer {
-  margin-top: 10em;
+  margin-top: 7em;
 }
 </style>

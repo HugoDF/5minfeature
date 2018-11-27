@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-for="option in timeOptions" :key="option.value">
+    <div class="radio-container" v-for="option in timeOptions" :key="option.value">
+      <label :for="option.labelText">{{option.labelText}}</label>
       <input  
         v-model="activeTime"
         type="radio"
@@ -9,7 +10,6 @@
         :value="option.value"
         :disabled="disabled"
         >
-      <label :for="option.labelText">{{option.labelText}}</label>
     </div>
   </div>
 </template>
@@ -64,5 +64,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.radio-container {
+  display: inline-block;
+}
+.radio-container:not(:last-child) {
+  margin-right: 10px;
+}
+.radio-container {
+  padding: 10px;
+}
+.radio-container > label {
+  padding: 5px;
+  display: flex;
+}
 </style>
