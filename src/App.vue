@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div v-if="!finished">
+    <h1>⏱ 5 minute feature</h1>
+    <div v-show="!finished">
       <div class="container">
         <FeatureNameInput
           :feature-name="featureName"
@@ -33,17 +34,29 @@
         <button @click="toggleCountdown()">
           {{ countingDown ? "Stop" : "Start" }}
         </button>
+        <div class="container">
+          <button @click="done()">
+            Done!
+          </button>
+          <button @click="reset()">
+            Reset
+          </button>
+        </div>
       </div>
     </div>
-    <div v-else class="container success-container">
-      <p>You finished "{{ featureName }}"</p>
-      <div class="share-container">
-        <TwitterShare
-          :text="shareText"
-        >
-          Let Twitter know
-        </TwitterShare>
-        
+    <div v-show="finished" class="container">
+      <button @click="undone()">&larr; Back</button>
+      <div class="success-container">
+        <p>You finished "{{ featureName }}"</p>
+        <div class="share-container">
+          <TwitterShare
+            :text="shareText"
+          >
+            Let Twitter know
+          </TwitterShare>
+        </div>
+      </div>
+      <div class="container">
         <button @click="reset()">
           Ship another feature
         </button>
@@ -56,6 +69,7 @@
 import FeatureNameInput from '@/components/FeatureNameInput.vue'
 import TimeSelector from '@/components/TimeSelector.vue'
 import Countdown from '@xkeshi/vue-countdown'
+import TwitterShare from '@/components/TwitterShare.vue'
 
 export default {
   name: 'app',
@@ -63,7 +77,7 @@ export default {
     FeatureNameInput,
     TimeSelector,
     Countdown,
-    TwitterShare: () => import('@/components/TwitterShare.vue')
+    TwitterShare
   },
   data() {
     return {
@@ -92,6 +106,13 @@ export default {
     reset() {
       this.finished = false
       this.featureName = ''
+    },
+    done() {
+      this.finished = true
+      this.countingDown = false
+    },
+    undone() {
+      this.finished = false
     }
   },
   computed: {
@@ -125,6 +146,7 @@ export default {
   justify-content: center;
 }
 .success-container {
-  margin-top: 10em;
+  padding-top: 2em;
+  padding-bottom: 2em;
 }
 </style>
