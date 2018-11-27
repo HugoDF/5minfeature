@@ -1,4 +1,4 @@
-# 5minfeature
+# ⏱ 5 minute feature
 
 ## Project setup
 ```
